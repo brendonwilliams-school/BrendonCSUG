@@ -1,0 +1,126 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+class BankAccount {
+    private double balance;
+
+    public BankAccount() {
+        balance = 0.0;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+    }
+
+    public void withdraw(double amount) {
+        balance -= amount;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+public class BankBalanceApp extends JFrame {
+
+    private BankAccount account;
+
+    private JTextField balanceField;
+    private JTextField amountField;
+    private JLabel resultLabel;
+
+    public BankBalanceApp() {
+        account = new BankAccount();
+
+        setTitle("Bank Balance Application");
+        setSize(400, 250);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 2, 10, 10));
+
+        JLabel balanceLabel = new JLabel("Starting Balance:");
+        balanceField = new JTextField();
+
+        JLabel amountLabel = new JLabel("Deposit/Withdraw Amount:");
+        amountField = new JTextField();
+
+        JButton setBalanceButton = new JButton("Set Balance");
+        JButton depositButton = new JButton("Deposit");
+        JButton withdrawButton = new JButton("Withdraw");
+        JButton exitButton = new JButton("Exit");
+
+        resultLabel = new JLabel("Balance: $0.00");
+
+        panel.add(balanceLabel);
+        panel.add(balanceField);
+
+        panel.add(amountLabel);
+        panel.add(amountField);
+
+        panel.add(setBalanceButton);
+        panel.add(depositButton);
+
+        panel.add(withdrawButton);
+        panel.add(exitButton);
+
+        panel.add(resultLabel);
+
+        add(panel);
+
+        setBalanceButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double balance = Double.parseDouble(balanceField.getText());
+                    account.setBalance(balance);
+                    resultLabel.setText(String.format("Balance: $%.2f", account.getBalance()));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid starting balance.");
+                }
+            }
+        });
+
+        depositButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double amount = Double.parseDouble(amountField.getText());
+                    account.deposit(amount);
+                    resultLabel.setText(String.format("Balance: $%.2f", account.getBalance()));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid deposit amount.");
+                }
+            }
+        });
+
+        withdrawButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double amount = Double.parseDouble(amountField.getText());
+                    account.withdraw(amount);
+                    resultLabel.setText(String.format("Balance: $%.2f", account.getBalance()));
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid withdrawal amount.");
+                }
+            }
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null,
+                        String.format("Final Balance: $%.2f", account.getBalance()));
+                System.exit(0);
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        BankBalanceApp app = new BankBalanceApp();
+        app.setVisible(true);
+    }
+}
