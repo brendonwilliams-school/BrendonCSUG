@@ -1,0 +1,111 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Random;
+
+public class MenuInterface extends JFrame {
+
+    private JTextArea textBox;
+    private Color currentGreenHue;
+
+    public MenuInterface() {
+        setTitle("Menu User Interface");
+        setSize(500, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        textBox = new JTextArea();
+        textBox.setLineWrap(true);
+        textBox.setWrapStyleWord(true);
+
+        JScrollPane scrollPane = new JScrollPane(textBox);
+        add(scrollPane, BorderLayout.CENTER);
+
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu menu = new JMenu("Options");
+
+        JMenuItem dateTimeItem = new JMenuItem("Print Date and Time");
+        JMenuItem saveItem = new JMenuItem("Save to log.txt");
+        JMenuItem greenItem = new JMenuItem("Change Background to Green Hue");
+        JMenuItem exitItem = new JMenuItem("Exit");
+
+        menu.add(dateTimeItem);
+        menu.add(saveItem);
+        menu.add(greenItem);
+        menu.add(exitItem);
+
+        menuBar.add(menu);
+        setJMenuBar(menuBar);
+
+        dateTimeItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                printDateTime();
+            }
+        });
+
+        saveItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveToFile();
+            }
+        });
+
+        greenItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                changeToRandomGreenHue(greenItem);
+            }
+        });
+
+        exitItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    private void printDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+
+        textBox.setText("Current Date and Time: " + now.format(formatter));
+    }
+
+    private void saveToFile() {
+        try {
+            FileWriter writer = new FileWriter("log.txt");
+            writer.write(textBox.getText());
+            writer.close();
+
+            JOptionPane.showMessageDialog(this, "Text saved to log.txt");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving file.");
+        }
+    }
+
+    private void changeToRandomGreenHue(JMenuItem greenItem) {
+        Random random = new Random();
+
+        int red = random.nextInt(80);
+        int green = 100 + random.nextInt(156);
+        int blue = random.nextInt(80);
+
+        currentGreenHue = new Color(red, green, blue);
+
+        getContentPane().setBackground(currentGreenHue);
+        textBox.setBackground(currentGreenHue);
+
+        String hexColor = String.format("#%02X%02X%02X", red, green, blue);
+
+        greenItem.setText("Green Hue: " + hexColor);
+    }
+
+    public static void main(String[] args) {
+        MenuInterface frame = new MenuInterface();
+        frame.setVisible(true);
+    }
+}
