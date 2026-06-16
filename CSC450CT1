@@ -1,0 +1,14 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    cout << "First Name: John" << endl;
+    cout << "Last Name: Smith" << endl;
+    cout << "Street Address: 123 Phoenix Ave" << endl;
+    cout << "City: Mesa" << endl;
+    cout << "Zip Code: 85201" << endl;
+
+    return 0;
+}
